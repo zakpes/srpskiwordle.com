@@ -43,9 +43,17 @@
         --blue: #85c0f9;
         font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
         font-size: 16px;
-        --header-height: 50px;
+        --header-height: auto;
+        --sv-header-padding: 10px 0;
         --keyboard-height: 200px;
         --game-max-width: 500px;
+        --sv-flex-wrap:wrap;
+        --sv-menu-width:69px;
+        --sv-title-position:relative;
+        --sv-mode-toggle-order:3;
+        --sv-mode-toggle-margin:10px auto 0;
+        --sv-mode-toggle-width:auto;
+        --sv-game-height:100%;
       }
       /* Light theme colors */
       :root {
@@ -120,6 +128,8 @@
         overflow-y: hidden;
       }
     </style>
+
+    <link rel="stylesheet" href="/style.css">
   </head>
   <body>
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -132,6 +142,13 @@
     gtag('config', 'G-TEM8DCXQDQ');
     </script>
     <script src="main.js"></script>
+<!-- 
+    <div class="sv-row">
+        <div class="sv-col">
+            
+        </div>
+    </div> -->
+
     <game-app></game-app>
   </body>
 </html>

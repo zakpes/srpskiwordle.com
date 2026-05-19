@@ -1,0 +1,25 @@
+.sv-row {
+	padding: 10px;
+}
+
+.sv-col {
+	display: flex;
+	justify-content: center;
+	margin: 0 auto;
+	width: 90%;
+	flex-wrap: wrap;
+	max-width: 1400px;
+}
+
+.sv-col a {
+	color: #fff;
+	font-size: 14px;
+}
+
+element {
+	order: 3;
+	display: block;
+	margin: 10px auto;
+	width: 100%;
+	max-width: 200px;
+}
