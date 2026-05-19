@@ -1471,7 +1471,8 @@
                                             var closeBtn = document.createElement("button");
                                             closeBtn.textContent = "Почни";
                                             closeBtn.style.cssText = "background-color: var(--color-correct); color: var(--tile-text-color); border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-family: inherit; font-weight: bold; margin-top: 15px;";
-                                            closeBtn.addEventListener("click", function() {
+                                            closeBtn.addEventListener("click", function(ev) {
+                                                ev.stopPropagation();
                                                 modal.removeAttribute("open");
                                                 modal.innerHTML = "";
                                             });
