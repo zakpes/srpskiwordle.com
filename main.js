@@ -1325,7 +1325,7 @@
                                             return "correct" === e;
                                         });
                                     if (i || l)
-                                        Va({ isWin: l, isStreak: !!this.lastCompletedTs && 1 === Na(new Date(this.lastCompletedTs), new Date()), numGuesses: this.rowIndex }),
+                                        Va({ isWin: l, isStreak: this.gameMode === "unlimited" ? !0 : !!this.lastCompletedTs && 1 === Na(new Date(this.lastCompletedTs), new Date()), numGuesses: this.rowIndex }),
                                             saveGameState({ lastCompletedTs: Date.now() }, this.gameMode === "unlimited"),
                                             (this.gameStatus = l ? es : as),
                                             Ca("event", "level_end", { level_name: Wa(this.solution), num_guesses: this.rowIndex, success: l });
