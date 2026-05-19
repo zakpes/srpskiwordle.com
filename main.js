@@ -1126,8 +1126,11 @@
         var Ya = "statistics",
             Ja = "fail",
             Ua = { currentStreak: 0, maxStreak: 0, guesses: n({ 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 }, Ja, 0), winPercentage: 0, gamesPlayed: 0, gamesWon: 0, averageGuesses: 0 };
+        function statsKey() {
+            return getGameMode() === "unlimited" ? Ya + "_unlimited" : Ya;
+        }
         function Xa() {
-            var e = window.localStorage.getItem(Ya) || JSON.stringify(Ua);
+            var e = window.localStorage.getItem(statsKey()) || JSON.stringify(Ua);
             return JSON.parse(e);
         }
         function Va(e) {
@@ -1149,7 +1152,7 @@
                     }, 0) / o.gamesWon
                 )),
                 (function (e) {
-                    window.localStorage.setItem(Ya, JSON.stringify(e));
+                    window.localStorage.setItem(statsKey(), JSON.stringify(e));
                 })(o);
         }
         var Ka = document.createElement("template");
@@ -1933,6 +1936,8 @@
                             value: function () {
                                 var e = this;
                                 this.shadowRoot.appendChild(Cs.content.cloneNode(!0));
+                                var modeLabel = getGameMode() === "unlimited" ? " (Неограничени)" : " (Дневни)";
+                                this.shadowRoot.querySelectorAll("h1").forEach(function (h) { h.textContent += modeLabel; });
                                 var a = this.shadowRoot.getElementById("statistics"),
                                     s = this.shadowRoot.getElementById("guess-distribution"),
                                     t = Math.max.apply(Math, g(Object.values(this.stats.guesses)));
