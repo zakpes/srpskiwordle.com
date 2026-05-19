@@ -1379,12 +1379,14 @@
                             key: "connectedCallback",
                             value: function () {
                                 var e = this;
+                                var skipIntroModals = window.sessionStorage.getItem("sw-mode-switch") === "1";
+                                window.sessionStorage.removeItem("sw-mode-switch");
                                 this.shadowRoot.appendChild(Ka.content.cloneNode(!0)),
                                     (this.$game = this.shadowRoot.querySelector("#game")),
                                     (this.$board = this.shadowRoot.querySelector("#board")),
                                     (this.$keyboard = this.shadowRoot.querySelector("game-keyboard")),
                                     this.sizeBoard(),
-                                    this.lastPlayedTs ||
+                                    skipIntroModals || this.lastPlayedTs ||
                                         setTimeout(function () {
                                             return e.showHelpModal();
                                         }, 100);
@@ -1458,10 +1460,16 @@
                                             if (newMode === getGameMode()) return;
                                             setGameMode(newMode);
                                             syncActivePill();
-                                            e.addToast("Режим промењен на " + (newMode === "unlimited" ? "Неограничени" : "Дневни") + ". Поново покрените игру.", 3000, !0);
+                                            pills.forEach(function(p) { p.disabled = true; });
+                                            e.addToast("Прелазак на " + (newMode === "unlimited" ? "Неограничени" : "Дневни") + " режим...", 1000, !0);
+                                            setTimeout(function() {
+                                                window.sessionStorage.setItem("sw-mode-switch", "1");
+                                                window.location.reload();
+                                            }, 600);
                                         });
                                     })(),
                                     (function() {
+                                        if (skipIntroModals) return;
                                         setTimeout(function() {
                                             var modal = e.$game.querySelector("game-modal");
                                             var content = document.createElement("div");
