@@ -1381,6 +1381,7 @@
                             value: function () {
                                 var e = this.$game.querySelector("game-modal"),
                                     a = document.createElement("game-stats");
+                                e.innerHTML = "";
                                 this.gameStatus === es && this.rowIndex <= 6 && a.setAttribute("highlight-guess", this.rowIndex), (a.gameApp = this), e.appendChild(a), e.setAttribute("open", "");
                             },
                         },
@@ -1388,6 +1389,7 @@
                             key: "showHelpModal",
                             value: function () {
                                 var e = this.$game.querySelector("game-modal");
+                                e.innerHTML = "";
                                 e.appendChild(document.createElement("game-help")), e.setAttribute("open", "");
                             },
                         },
@@ -1395,7 +1397,7 @@
                             key: "connectedCallback",
                             value: function () {
                                 var e = this;
-                                var skipIntroModals = window.sessionStorage.getItem("sw-mode-switch") === "1";
+                                var skipIntroModals = window.sessionStorage.getItem("sw-mode-switch") === "1" || this.restoringFromLocalStorage;
                                 window.sessionStorage.removeItem("sw-mode-switch");
                                 this.shadowRoot.appendChild(Ka.content.cloneNode(!0)),
                                     (this.$game = this.shadowRoot.querySelector("#game")),
@@ -1560,7 +1562,7 @@
                                     e.shadowRoot.querySelector(".content").classList.add("closing");
                                 }),
                                 this.shadowRoot.addEventListener("animationend", function (a) {
-                                    "SlideOut" === a.animationName && (e.shadowRoot.querySelector(".content").classList.remove("closing"), e.removeChild(e.firstChild), e.removeAttribute("open"));
+                                    "SlideOut" === a.animationName && (e.shadowRoot.querySelector(".content").classList.remove("closing"), (e.innerHTML = ""), e.removeAttribute("open"));
                                 });
                         },
                     },
