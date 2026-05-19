@@ -941,10 +941,32 @@
                     return e;
                 })),
             wa = "gameState",
-            xa = { boardState: null, evaluations: null, rowIndex: null, solution: null, gameStatus: null, lastPlayedTs: null, lastCompletedTs: null, restoringFromLocalStorage: null, hardMode: !1 };
+            xa = { boardState: null, evaluations: null, rowIndex: null, solution: null, gameStatus: null, lastPlayedTs: null, lastCompletedTs: null, restoringFromLocalStorage: null, hardMode: !1 },
+            gameModeKey = "gameMode",
+            unlimitedGameStateKey = "unlimitedGameState";
         function za() {
             var e = window.localStorage.getItem(wa) || JSON.stringify(xa);
             return JSON.parse(e);
+        }
+        function getGameMode() {
+            return window.localStorage.getItem(gameModeKey) || "daily";
+        }
+        function setGameMode(e) {
+            window.localStorage.setItem(gameModeKey, e);
+        }
+        function getUnlimitedGameState() {
+            var e = window.localStorage.getItem(unlimitedGameStateKey) || JSON.stringify(xa);
+            return JSON.parse(e);
+        }
+        function setUnlimitedGameState(e) {
+            window.localStorage.setItem(unlimitedGameStateKey, JSON.stringify(e));
+        }
+        function saveGameState(gameState, isUnlimited) {
+            if (isUnlimited) {
+                setUnlimitedGameState(gameState);
+            } else {
+                ja(gameState);
+            }
         }
         function ja(e) {
             var a = za();
@@ -957,7 +979,7 @@
         let swCurrentYear = swCurrentDate.getFullYear();
 
         Sa.innerHTML =
-            '\n  <style>\n  .setting {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    border-bottom: 1px solid var(--color-tone-4);\n    padding: 16px 0;\n  }\n\n  a, a:visited {\n    color: var(--color-tone-2);\n  }\n\n  .title {\n    font-size: 18px;\n  }\n  .text {\n    padding-right: 8px;\n  }\n  .description {\n    font-size: 12px;\n    color: var(--color-tone-2);\n  }\n\n  #footnote {\n    position: absolute;\n    bottom: 0;\n    left: 0;\n    right: 0;\n    padding: 16px;\n    color: var(--color-tone-2);\n    font-size: 12px;\n    text-align: right;\n    display: flex;\n    justify-content: space-between;\n    align-items: flex-end;\n  }\n\n  @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {\n    .setting {\n      padding: 16px;\n    }\n  }\n\n  </style>\n  <div class="sections">\n    <section>\n      <div class="setting">\n        <div class="text">\n          <div class="title">Хард Мод</div>\n          <div class="description">Откривена слова морају бити коришћена у наредним покушајима</div>\n        </div>\n        <div class="control">\n          <game-switch id="hard-mode" name="hard-mode"></game-switch>\n        </div>\n      </div>\n      <div class="setting">\n        <div class="text">\n          <div class="title">Тамна Тема</div>\n        </div>\n        <div class="control">\n          <game-switch id="dark-theme" name="dark-theme"></game-switch>\n        </div>\n      </div>\n      <div class="setting">\n        <div class="text">\n          <div class="title">Режим Боја за Далтонисте</div>\n          <div class="description">Боје високог контраста</div>\n        </div>\n        <div class="control">\n          <game-switch id="color-blind-theme" name="color-blind-theme"></game-switch>\n        </div>\n      </div>\n    </section>\n\n    <section>\n      <div class="setting">\n        <div class="text">\n          <div class="title">Контакт</div>\n        </div>\n        <div class="control">\n          <a href="mailto:srpskiwordle@gmail.com" title="srpskiwordle@gmail.com">srpskiwordle@gmail.com</a>\n          \n        </div>\n      </div>\n    </section>\n  </div>\n  <div id="footnote">\n    <div id="copyright">&copy;' + swCurrentYear + '. Сва Права Задржана.</div>\n    <div>\n      <div id="puzzle-number"></div>\n      <div id="hash"></div>\n    </div>\n  </div>\n';
+            '\n  <style>\n  .setting {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    border-bottom: 1px solid var(--color-tone-4);\n    padding: 16px 0;\n  }\n\n  a, a:visited {\n    color: var(--color-tone-2);\n  }\n\n  .title {\n    font-size: 18px;\n  }\n  .text {\n    padding-right: 8px;\n  }\n  .description {\n    font-size: 12px;\n    color: var(--color-tone-2);\n  }\n\n  #footnote {\n    position: absolute;\n    bottom: 0;\n    left: 0;\n    right: 0;\n    padding: 16px;\n    color: var(--color-tone-2);\n    font-size: 12px;\n    text-align: right;\n    display: flex;\n    justify-content: space-between;\n    align-items: flex-end;\n  }\n\n  @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {\n    .setting {\n      padding: 16px;\n    }\n  }\n\n  </style>\n  <div class="sections">\n    <section>\n      <div class="setting">\n        <div class="text">\n          <div class="title">Режим</div>\n          <div class="description">Дневни или неограничени режим</div>\n        </div>\n        <div class="control">\n          <select id="game-mode" style="padding: 8px; border-radius: 4px; border: 1px solid var(--color-tone-4); background-color: var(--color-tone-7); color: var(--color-tone-1); font-family: inherit; cursor: pointer;">\n            <option value="daily">Дневни</option>\n            <option value="unlimited">Неограничени</option>\n          </select>\n        </div>\n      </div>\n      <div class="setting">\n        <div class="text">\n          <div class="title">Хард Мод</div>\n          <div class="description">Откривена слова морају бити коришћена у наредним покушајима</div>\n        </div>\n        <div class="control">\n          <game-switch id="hard-mode" name="hard-mode"></game-switch>\n        </div>\n      </div>\n      <div class="setting">\n        <div class="text">\n          <div class="title">Тамна Тема</div>\n        </div>\n        <div class="control">\n          <game-switch id="dark-theme" name="dark-theme"></game-switch>\n        </div>\n      </div>\n      <div class="setting">\n        <div class="text">\n          <div class="title">Режим Боја за Далтонисте</div>\n          <div class="description">Боје високог контраста</div>\n        </div>\n        <div class="control">\n          <game-switch id="color-blind-theme" name="color-blind-theme"></game-switch>\n        </div>\n      </div>\n    </section>\n\n    <section>\n      <div class="setting">\n        <div class="text">\n          <div class="title">Контакт</div>\n        </div>\n        <div class="control">\n          <a href="mailto:srpskiwordle@gmail.com" title="srpskiwordle@gmail.com">srpskiwordle@gmail.com</a>\n          \n        </div>\n      </div>\n    </section>\n  </div>\n  <div id="footnote">\n    <div id="copyright">&copy;' + swCurrentYear + '. Сва Права Задржана.</div>\n    <div>\n      <div id="puzzle-number"></div>\n      <div id="hash"></div>\n    </div>\n  </div>\n';
         var _a = (function (e) {
             r(t, e);
             var a = h(t);
@@ -983,6 +1005,15 @@
                                         n = s.disabled;
                                     a.dispatchEvent(new CustomEvent("game-setting-change", { bubbles: !0, composed: !0, detail: { name: t, checked: o, disabled: n } })), a.render();
                                 }),
+                                this.shadowRoot.querySelector("#game-mode").addEventListener("change", function (e) {
+                                    setGameMode(e.target.value),
+                                    a.dispatchEvent(new CustomEvent("game-mode-change", { bubbles: !0, composed: !0, detail: { mode: e.target.value } })),
+                                    a.addToast && a.addToast("Режим промењен. Поново покрените игру.");
+                                    var modeToggleBtn = document.querySelector("#mode-toggle");
+                                    if (modeToggleBtn) {
+                                        modeToggleBtn.textContent = e.target.value === "unlimited" ? "Неограничени" : "Дневни";
+                                    }
+                                }),
                                 this.render();
                         },
                     },
@@ -992,7 +1023,13 @@
                             var e = document.querySelector("body");
                             e.classList.contains("nightmode") && this.shadowRoot.querySelector("#dark-theme").setAttribute("checked", ""),
                                 e.classList.contains("colorblind") && this.shadowRoot.querySelector("#color-blind-theme").setAttribute("checked", "");
-                            var a = za();
+                            var a = za(),
+                                currentMode = getGameMode();
+                            this.shadowRoot.querySelector("#game-mode").value = currentMode;
+                            var modeToggleBtn = document.querySelector("#mode-toggle");
+                            if (modeToggleBtn) {
+                                modeToggleBtn.textContent = currentMode === "unlimited" ? "Неограничени" : "Дневни";
+                            }
                             a.hardMode && this.shadowRoot.querySelector("#hard-mode").setAttribute("checked", ""),
                                 a.hardMode ||
                                     "IN_PROGRESS" !== a.gameStatus ||
@@ -1098,6 +1135,9 @@
             }
             return a;
         }
+        function getRandomWord() {
+            return La[Math.floor(Math.random() * La.length)];
+        }
         var Ya = "statistics",
             Ja = "fail",
             Ua = { currentStreak: 0, maxStreak: 0, guesses: n({ 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 }, Ja, 0), winPercentage: 0, gamesPlayed: 0, gamesWon: 0, averageGuesses: 0 };
@@ -1132,7 +1172,7 @@
             .concat(1e3, ";\n  }\n  #system-toaster {\n    z-index: ")
             .concat(
                 4e3,
-                ';\n  }\n\n  #game {\n    width: 100%;\n    max-width: var(--game-max-width);\n    margin: 0 auto;\n    height: 100%;\n    display: flex;\n    flex-direction: column;\n  }\n  header {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    height: var(--header-height);\n    color: var(--color-tone-1);\n    border-bottom: 1px solid var(--color-tone-4);\n  }\n  header .title {\n    font-weight: 700;\n    font-size: 36px;\n    letter-spacing: 0.2rem;\n    text-transform: uppercase;\n    text-align: center;\n    position: absolute;\n    left: 0;\n    right: 0;\n    pointer-events: none;\n  }\n\n  @media (max-width: 360px) {\n    header .title {\n      font-size: 22px;\n      letter-spacing: 0.1rem;\n    }\n  }\n\n  #board-container {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    flex-grow: 1;\n    overflow: hidden;\n  }\n  #board {\n    display: grid;\n    grid-template-rows: repeat(6, 1fr);\n    grid-gap: 5px;\n    padding:10px;\n    box-sizing: border-box;\n  }\n  button.icon {\n    background: none;\n    border: none;\n    cursor: pointer;\n    padding: 0 4px;\n  }\n\n  #debug-tools {\n    position: absolute;\n    bottom: 0;\n  }\n\n  </style>\n  <game-theme-manager>\n    <div id="game">\n      <header>\n        <div class="menu">\n          <button id="help-button" class="icon" aria-label="help">\n            <game-icon icon="help"></game-icon>\n          </button>\n        </div>\n        <div class="title">\n         СРПСКИ ВОРДЛ\n        </div>\n        <div class="menu">\n          <button id="statistics-button" class="icon" aria-label="statistics">\n            <game-icon icon="statistics"></game-icon>\n          </button>\n          <button id="settings-button" class="icon" aria-label="settings">\n            <game-icon icon="settings"></game-icon>\n          </button>\n        </div>\n      </header>\n        <div id="board-container">\n          <div id="board"></div>\n        </div>\n        <game-keyboard></game-keyboard>\n        <game-modal></game-modal>\n        <game-page></game-page>\n        <div class="toaster" id="game-toaster"></div>\n        <div class="toaster" id="system-toaster"></div>\n    </div>\n  </game-theme-manager>\n  <div id="debug-tools"></div>\n'
+                ';\n  }\n\n  #game {\n    width: 100%;\n    max-width: var(--game-max-width);\n    margin: 0 auto;\n    height: 100%;\n    display: flex;\n    flex-direction: column;\n  }\n  header {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    height: var(--header-height);\n    color: var(--color-tone-1);\n    border-bottom: 1px solid var(--color-tone-4);\n  }\n  header .title {\n    font-weight: 700;\n    font-size: 36px;\n    letter-spacing: 0.2rem;\n    text-transform: uppercase;\n    text-align: center;\n    position: absolute;\n    left: 0;\n    right: 0;\n    pointer-events: none;\n  }\n\n  @media (max-width: 360px) {\n    header .title {\n      font-size: 22px;\n      letter-spacing: 0.1rem;\n    }\n  }\n\n  #board-container {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    flex-grow: 1;\n    overflow: hidden;\n  }\n  #board {\n    display: grid;\n    grid-template-rows: repeat(6, 1fr);\n    grid-gap: 5px;\n    padding:10px;\n    box-sizing: border-box;\n  }\n  button.icon {\n    background: none;\n    border: none;\n    cursor: pointer;\n    padding: 0 4px;\n  }\n\n  #mode-toggle {\n    background: none;\n    border: 2px solid var(--color-correct);\n    color: var(--color-correct);\n    border-radius: 4px;\n    cursor: pointer;\n    padding: 6px 12px;\n    font-family: inherit;\n    font-weight: bold;\n    font-size: 12px;\n    text-transform: uppercase;\n    transition: all 0.3s ease;\n    margin-right: 8px;\n  }\n\n  #mode-toggle:hover {\n    background-color: var(--color-correct);\n    color: var(--tile-text-color);\n  }\n\n  #debug-tools {\n    position: absolute;\n    bottom: 0;\n  }\n\n  </style>\n  <game-theme-manager>\n    <div id="game">\n      <header>\n        <div class="menu">\n          <button id="help-button" class="icon" aria-label="help">\n            <game-icon icon="help"></game-icon>\n          </button>\n        </div>\n        <div class="title">\n         СРПСКИ ВОРДЛ\n        </div>\n        <button id="mode-toggle" aria-label="toggle-mode">Неограничени</button>\n        <div class="menu">\n          <button id="statistics-button" class="icon" aria-label="statistics">\n            <game-icon icon="statistics"></game-icon>\n          </button>\n          <button id="settings-button" class="icon" aria-label="settings">\n            <game-icon icon="settings"></game-icon>\n          </button>\n        </div>\n      </header>\n        <div id="board-container">\n          <div id="board"></div>\n        </div>\n        <game-keyboard></game-keyboard>\n        <game-modal></game-modal>\n        <game-page></game-page>\n        <div class="toaster" id="game-toaster"></div>\n        <div class="toaster" id="system-toaster"></div>\n    </div>\n  </game-theme-manager>\n  <div id="debug-tools"></div>\n'
             );
         var Qa = document.createElement("template");
         Qa.innerHTML = '\n<button id="reveal">reveal</button>\n<button id="shake">shake</button>\n<button id="bounce">bounce</button>\n<button id="toast">toast</button>\n<button id="modal">modal</button>\n';
@@ -1162,37 +1202,81 @@
                         n(p(e), "lastCompletedTs", void 0),
                         n(p(e), "hardMode", void 0),
                         n(p(e), "dayOffset", void 0),
+                        n(p(e), "gameMode", void 0),
                         e.attachShadow({ mode: "open" }),
                         (e.today = new Date());
-                    var o = za();
+                    var o = za(),
+                        gameMode = getGameMode();
+                    (e.gameMode = gameMode);
                     return (
-                        (e.lastPlayedTs = o.lastPlayedTs),
-                        !e.lastPlayedTs || Na(new Date(e.lastPlayedTs), e.today) >= 1
+                        gameMode === "unlimited"
                             ? ((e.boardState = new Array(6).fill("")),
                               (e.evaluations = new Array(6).fill(null)),
-                              (e.solution = Da(e.today)),
-                              (e.dayOffset = Ga(e.today)),
-                              (e.lastCompletedTs = o.lastCompletedTs),
-                              (e.hardMode = o.hardMode),
+                              (e.solution = getRandomWord()),
+                              (e.dayOffset = 0),
+                              (e.lastCompletedTs = null),
+                              (e.hardMode = !1),
                               (e.restoringFromLocalStorage = !1),
-                              ja({ rowIndex: e.rowIndex, boardState: e.boardState, evaluations: e.evaluations, solution: e.solution, gameStatus: e.gameStatus }),
+                              setUnlimitedGameState({ rowIndex: e.rowIndex, boardState: e.boardState, evaluations: e.evaluations, solution: e.solution, gameStatus: e.gameStatus }),
                               Ca("event", "level_start", { level_name: Wa(e.solution) }))
-                            : ((e.boardState = o.boardState),
-                              (e.evaluations = o.evaluations),
-                              (e.rowIndex = o.rowIndex),
-                              (e.solution = o.solution),
-                              (e.dayOffset = Ga(e.today)),
-                              (e.letterEvaluations = $a(e.boardState, e.evaluations)),
-                              (e.gameStatus = o.gameStatus),
-                              (e.lastCompletedTs = o.lastCompletedTs),
-                              (e.hardMode = o.hardMode),
-                              e.gameStatus !== Za && (e.canInput = !1),
-                              (e.restoringFromLocalStorage = !0)),
+                            : ((e.lastPlayedTs = o.lastPlayedTs),
+                              !e.lastPlayedTs || Na(new Date(e.lastPlayedTs), e.today) >= 1
+                                ? ((e.boardState = new Array(6).fill("")),
+                                  (e.evaluations = new Array(6).fill(null)),
+                                  (e.solution = Da(e.today)),
+                                  (e.dayOffset = Ga(e.today)),
+                                  (e.lastCompletedTs = o.lastCompletedTs),
+                                  (e.hardMode = o.hardMode),
+                                  (e.restoringFromLocalStorage = !1),
+                                  ja({ rowIndex: e.rowIndex, boardState: e.boardState, evaluations: e.evaluations, solution: e.solution, gameStatus: e.gameStatus }),
+                                  Ca("event", "level_start", { level_name: Wa(e.solution) }))
+                                : ((e.boardState = o.boardState),
+                                  (e.evaluations = o.evaluations),
+                                  (e.rowIndex = o.rowIndex),
+                                  (e.solution = o.solution),
+                                  (e.dayOffset = Ga(e.today)),
+                                  (e.letterEvaluations = $a(e.boardState, e.evaluations)),
+                                  (e.gameStatus = o.gameStatus),
+                                  (e.lastCompletedTs = o.lastCompletedTs),
+                                  (e.hardMode = o.hardMode),
+                                  e.gameStatus !== Za && (e.canInput = !1),
+                                  (e.restoringFromLocalStorage = !0))),
                         e
                     );
                 }
                 return (
                     o(t, [
+                        {
+                            key: "startNewGame",
+                            value: function () {
+                                (this.rowIndex = 0),
+                                (this.tileIndex = 0),
+                                (this.boardState = new Array(6).fill("")),
+                                (this.evaluations = new Array(6).fill(null)),
+                                (this.letterEvaluations = {}),
+                                (this.solution = this.gameMode === "unlimited" ? getRandomWord() : Da(this.today)),
+                                (this.gameStatus = Za),
+                                (this.canInput = !0);
+                                var rows = this.$board.querySelectorAll("game-row");
+                                for (var i = 0; i < rows.length; i++) {
+                                    rows[i].removeAttribute("letters");
+                                    rows[i].removeAttribute("evaluation");
+                                    rows[i].removeAttribute("win");
+                                    rows[i].removeAttribute("invalid");
+                                }
+                                if (this.gameMode === "unlimited") {
+                                    setUnlimitedGameState({ rowIndex: this.rowIndex, boardState: this.boardState, evaluations: this.evaluations, solution: this.solution, gameStatus: this.gameStatus });
+                                } else {
+                                    ja({ rowIndex: this.rowIndex, boardState: this.boardState, evaluations: this.evaluations, solution: this.solution, gameStatus: this.gameStatus });
+                                }
+                                this.$keyboard.letterEvaluations = {};
+                                var toaster = this.shadowRoot.querySelector("#game-toaster");
+                                if (toaster) {
+                                    toaster.innerHTML = "";
+                                }
+                                Ca("event", "level_start", { level_name: Wa(this.solution) });
+                            }
+                        },
                         {
                             key: "evaluateRow",
                             value: function () {
@@ -1238,12 +1322,12 @@
                                         });
                                     if (i || l)
                                         Va({ isWin: l, isStreak: !!this.lastCompletedTs && 1 === Na(new Date(this.lastCompletedTs), new Date()), numGuesses: this.rowIndex }),
-                                            ja({ lastCompletedTs: Date.now() }),
+                                            saveGameState({ lastCompletedTs: Date.now() }, this.gameMode === "unlimited"),
                                             (this.gameStatus = l ? es : as),
                                             Ca("event", "level_end", { level_name: Wa(this.solution), num_guesses: this.rowIndex, success: l });
                                     (this.tileIndex = 0),
                                         (this.canInput = !1),
-                                        ja({ rowIndex: this.rowIndex, boardState: this.boardState, evaluations: this.evaluations, solution: this.solution, gameStatus: this.gameStatus, lastPlayedTs: Date.now() });
+                                        saveGameState({ rowIndex: this.rowIndex, boardState: this.boardState, evaluations: this.evaluations, solution: this.solution, gameStatus: this.gameStatus, lastPlayedTs: Date.now() }, this.gameMode === "unlimited");
                                 }
                             },
                         },
@@ -1348,7 +1432,7 @@
                                             n = s.disabled;
                                         switch (t) {
                                             case "hard-mode":
-                                                return void (n ? e.addToast("Хард мод може бити укључен само на почетку рунде", 1500, !0) : ((e.hardMode = o), ja({ hardMode: o })));
+                                                return void (n ? e.addToast("Хард мод може бити укључен само на почетку рунде", 1500, !0) : ((e.hardMode = o), saveGameState({ hardMode: o }, e.gameMode === "unlimited")));
                                         }
                                     }),
                                     this.shadowRoot.getElementById("settings-button").addEventListener("click", function (a) {
@@ -1368,6 +1452,35 @@
                                     this.shadowRoot.getElementById("statistics-button").addEventListener("click", function (a) {
                                         e.showStatsModal();
                                     }),
+                                    this.shadowRoot.getElementById("mode-toggle").addEventListener("click", function (a) {
+                                        var currentMode = getGameMode();
+                                        var newMode = currentMode === "daily" ? "unlimited" : "daily";
+                                        setGameMode(newMode);
+                                        a.target.textContent = newMode === "unlimited" ? "Неограничени" : "Дневни";
+                                        e.addToast("Режим промењен на " + (newMode === "unlimited" ? "Неограничени" : "Дневни") + ". Поново покрените игру.", 3000, !0);
+                                        var settingsMode = e.shadowRoot.querySelector("#game-mode");
+                                        if (settingsMode) {
+                                            settingsMode.value = newMode;
+                                        }
+                                    }),
+                                    (function() {
+                                        setTimeout(function() {
+                                            var modal = e.$game.querySelector("game-modal");
+                                            var content = document.createElement("div");
+                                            content.style.cssText = "padding: 20px; text-align: center; line-height: 1.6;";
+                                            content.innerHTML = '<h2 style="margin: 0 0 15px 0; font-size: 24px;">🎉 Неограничени Режим! 🎉</h2><p style="margin: 10px 0;">Добро дошли у новитете!</p><p style="margin: 10px 0; font-size: 14px;">Сада можете играти <strong>неограничено много пута</strong> без чекања на дневну реч. Просто кликните на <strong style="color: var(--color-correct);">Неограничени</strong> дугме у горњој траци.</p><p style="margin: 20px 0 0 0; font-size: 13px; opacity: 0.8;">Наставите са дневним режимом или пробајте нешто ново!</p>';
+                                            modal.appendChild(content);
+                                            var closeBtn = document.createElement("button");
+                                            closeBtn.textContent = "Почни";
+                                            closeBtn.style.cssText = "background-color: var(--color-correct); color: var(--tile-text-color); border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-family: inherit; font-weight: bold; margin-top: 15px;";
+                                            closeBtn.addEventListener("click", function() {
+                                                modal.removeAttribute("open");
+                                                modal.innerHTML = "";
+                                            });
+                                            content.appendChild(closeBtn);
+                                            modal.setAttribute("open", "");
+                                        }, 800);
+                                    })(),
                                     window.addEventListener("resize", this.sizeBoard.bind(this));
                             },
                         },
@@ -1510,9 +1623,17 @@
                         {
                             key: "_render",
                             value: function () {
+                                var allKeys = this.$keyboard.querySelectorAll("button[data-key]");
+                                for (var i = 0; i < allKeys.length; i++) {
+                                    var key = allKeys[i];
+                                    key.removeAttribute("data-state");
+                                    key.classList.remove("fade");
+                                }
                                 for (var e in this._letterEvaluations) {
                                     var a = this.$keyboard.querySelector('[data-key="'.concat(e, '"]'));
-                                    (a.dataset.state = this._letterEvaluations[e]), a.classList.add("fade");
+                                    if (a) {
+                                        (a.dataset.state = this._letterEvaluations[e]), a.classList.add("fade");
+                                    }
                                 }
                             },
                         },
@@ -1821,9 +1942,31 @@
                                     }),
                                     this.gameApp.gameStatus !== Za)
                                 ) {
-                                    var p = this.shadowRoot.querySelector(".footer"),
-                                        m = Is.content.cloneNode(!0);
-                                    p.appendChild(m),
+                                    var p = this.shadowRoot.querySelector(".footer");
+                                    var currentGameMode = getGameMode();
+                                    var isUnlimited = currentGameMode === "unlimited" || e.gameApp.gameMode === "unlimited";
+                                    if (isUnlimited) {
+                                        var playAgainDiv = document.createElement("div");
+                                        playAgainDiv.style.cssText = "display: flex; width: 100%; justify-content: center; align-items: center; padding: 16px;";
+                                        var playAgainBtn = document.createElement("button");
+                                        playAgainBtn.id = "play-again-button";
+                                        playAgainBtn.style.cssText = "background-color: var(--color-correct); color: var(--key-evaluated-text-color); font-family: inherit; font-weight: bold; border-radius: 4px; cursor: pointer; border: none; user-select: none; display: flex; justify-content: center; align-items: center; text-transform: uppercase; width: 90%; font-size: 18px; height: 50px; -webkit-tap-highlight-color: rgba(0,0,0,0.3); padding: 12px;";
+                                        playAgainBtn.textContent = "ИГРАЈ ПОНОВО";
+                                        playAgainDiv.appendChild(playAgainBtn);
+                                        p.innerHTML = "";
+                                        p.appendChild(playAgainDiv);
+                                        playAgainBtn.addEventListener("click", function () {
+                                            e.gameApp.startNewGame();
+                                            setTimeout(function() {
+                                                var modal = p.closest("game-modal");
+                                                if (modal) {
+                                                    modal.removeAttribute("open");
+                                                }
+                                            }, 100);
+                                        });
+                                    } else {
+                                        var m = Is.content.cloneNode(!0);
+                                        p.appendChild(m);
                                         this.shadowRoot.querySelector("button#share-button").addEventListener("click", function (a) {
                                             a.preventDefault(), a.stopPropagation();
                                             As(
@@ -1876,6 +2019,7 @@
                                                 }
                                             );
                                         });
+                                    }
                                 }
                             },
                         },
