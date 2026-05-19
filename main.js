@@ -1195,15 +1195,31 @@
                     (e.gameMode = gameMode);
                     return (
                         gameMode === "unlimited"
-                            ? ((e.boardState = new Array(6).fill("")),
-                              (e.evaluations = new Array(6).fill(null)),
-                              (e.solution = getRandomWord()),
-                              (e.dayOffset = 0),
-                              (e.lastCompletedTs = null),
-                              (e.hardMode = !1),
-                              (e.restoringFromLocalStorage = !1),
-                              setUnlimitedGameState({ rowIndex: e.rowIndex, boardState: e.boardState, evaluations: e.evaluations, solution: e.solution, gameStatus: e.gameStatus }),
-                              Ca("event", "level_start", { level_name: Wa(e.solution) }))
+                            ? (function() {
+                                var u = getUnlimitedGameState();
+                                if (u && u.solution && u.gameStatus === Za && u.rowIndex > 0) {
+                                    e.boardState = u.boardState;
+                                    e.evaluations = u.evaluations;
+                                    e.rowIndex = u.rowIndex;
+                                    e.solution = u.solution;
+                                    e.dayOffset = 0;
+                                    e.letterEvaluations = $a(e.boardState, e.evaluations);
+                                    e.gameStatus = u.gameStatus;
+                                    e.lastCompletedTs = null;
+                                    e.hardMode = !1;
+                                    e.restoringFromLocalStorage = !0;
+                                } else {
+                                    e.boardState = new Array(6).fill("");
+                                    e.evaluations = new Array(6).fill(null);
+                                    e.solution = getRandomWord();
+                                    e.dayOffset = 0;
+                                    e.lastCompletedTs = null;
+                                    e.hardMode = !1;
+                                    e.restoringFromLocalStorage = !1;
+                                    setUnlimitedGameState({ rowIndex: e.rowIndex, boardState: e.boardState, evaluations: e.evaluations, solution: e.solution, gameStatus: e.gameStatus });
+                                    Ca("event", "level_start", { level_name: Wa(e.solution) });
+                                }
+                            })()
                             : ((e.lastPlayedTs = o.lastPlayedTs),
                               !e.lastPlayedTs || Na(new Date(e.lastPlayedTs), e.today) >= 1
                                 ? ((e.boardState = new Array(6).fill("")),
