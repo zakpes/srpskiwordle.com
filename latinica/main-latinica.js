@@ -940,10 +940,10 @@
                     }
                     return e;
                 })),
-            wa = "gameState",
+            wa = "gameState_la",
             xa = { boardState: null, evaluations: null, rowIndex: null, solution: null, gameStatus: null, lastPlayedTs: null, lastCompletedTs: null, restoringFromLocalStorage: null, hardMode: !1 },
-            gameModeKey = "gameMode",
-            unlimitedGameStateKey = "unlimitedGameState";
+            gameModeKey = "gameMode_la",
+            unlimitedGameStateKey = "unlimitedGameState_la";
         function za() {
             var e = window.localStorage.getItem(wa) || JSON.stringify(xa);
             return JSON.parse(e);
@@ -1123,7 +1123,7 @@ var La = ["dobro","nisam","zašto","nešto","hvala","možda","treba","ništa","m
         function getRandomWord() {
             return La[Math.floor(Math.random() * La.length)];
         }
-        var Ya = "statistics",
+        var Ya = "statistics_la",
             Ja = "fail",
             Ua = { currentStreak: 0, maxStreak: 0, guesses: n({ 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 }, Ja, 0), winPercentage: 0, gamesPlayed: 0, gamesWon: 0, averageGuesses: 0 };
         function statsKey() {
@@ -1404,8 +1404,8 @@ var La = ["dobro","nisam","zašto","nešto","hvala","možda","treba","ništa","m
                             key: "connectedCallback",
                             value: function () {
                                 var e = this;
-                                var skipIntroModals = window.sessionStorage.getItem("sw-mode-switch") === "1" || this.restoringFromLocalStorage;
-                                window.sessionStorage.removeItem("sw-mode-switch");
+                                var skipIntroModals = window.sessionStorage.getItem("sw-mode-switch_la") === "1" || this.restoringFromLocalStorage;
+                                window.sessionStorage.removeItem("sw-mode-switch_la");
                                 this.shadowRoot.appendChild(Ka.content.cloneNode(!0)),
                                     (this.$game = this.shadowRoot.querySelector("#game")),
                                     (this.$board = this.shadowRoot.querySelector("#board")),
@@ -1488,7 +1488,7 @@ var La = ["dobro","nisam","zašto","nešto","hvala","možda","treba","ništa","m
                                             pills.forEach(function(p) { p.disabled = true; });
                                             e.addToast("Prelazak na " + (newMode === "unlimited" ? "Neograničeni" : "Dnevni") + " režim...", 1000, !0);
                                             setTimeout(function() {
-                                                window.sessionStorage.setItem("sw-mode-switch", "1");
+                                                window.sessionStorage.setItem("sw-mode-switch_la", "1");
                                                 window.location.reload();
                                             }, 600);
                                         });
@@ -1586,9 +1586,9 @@ var La = ["dobro","nisam","zašto","nešto","hvala","možda","treba","ništa","m
         var ls = document.createElement("template");
         ls.innerHTML = '\n  <div class="spacer"></div>\n';
         var ds = [
-                ["e", "r", "t", "z", "u", "i", "o", "p", "š", "đ", "ǆ"],
-                ["a", "s", "d", "f", "g", "h", "j", "k", "l", "č", "ć"],
-                ["â†µ", "c", "v", "b", "n", "ǌ", "m", "ž", "ǉ", "â†"],
+                ["ǉ", "ǌ", "e", "r", "t", "z", "u", "i", "o", "p", "š", "đ"],
+                ["a", "s", "d", "f", "g", "h", "j", "k", "l", "č", "ć", "ž"],
+                ["â†µ", "ǆ", "c", "v", "b", "n", "m", "â†"],
             ],
             us = (function (e) {
                 r(t, e);
