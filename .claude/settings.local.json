@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(awk 'NR>=1069 && NR<=1075 {print NR\": \"substr\\($0,1,80\\)\"...\"}' \"c:/Web Design/srpskiwordle.com/latinica/main-latinica.js\")"
+    ]
+  }
+}
