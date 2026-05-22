@@ -1626,20 +1626,15 @@
                                         var modal = e.$game.querySelector("game-modal");
                                         modal.innerHTML = "";
                                         var allDone = anagramBoards.every(function (b) { return b.status !== Za; });
-                                        var doneCount = anagramBoards.filter(function (b) { return b.status !== Za; }).length;
-                                        var wins = anagramBoards.filter(function (b) { return b.status === es; }).length;
                                         var anyEval = anagramBoards.some(function (b) { return b.evaluations.some(function (r) { return r; }); });
                                         var stats = Xa();
                                         var isUnlimited = e.gameMode === "unlimited";
-                                        var title = "Анаграм #" + e.dayOffset;
-                                        var subtitle = allDone ? (wins + "/3 победа") : (doneCount + " од 3 завршено");
                                         var modeLabel = isUnlimited ? "Неограничени" : "Дневни";
+                                        var headStyle = "font-weight:700;font-size:16px;letter-spacing:0.5px;text-transform:uppercase;text-align:center;";
                                         var content = document.createElement("div");
-                                        content.style.cssText = "padding: 20px 12px; text-align: center; line-height: 1.4;";
-                                        var html = '<h2 style="margin: 0 0 4px 0; font-size: 22px;">' + title + '</h2>' +
-                                                   '<p style="margin: 0 0 12px 0; color: var(--color-tone-2); font-size: 14px;">' + subtitle + '</p>';
-                                        html += '<h3 style="margin: 14px 0 6px 0; font-size: 12px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;">Статистика (' + modeLabel + ')</h3>';
-                                        html += '<div style="display: flex; justify-content: center; gap: 2px; margin-bottom: 10px;">';
+                                        content.style.cssText = "text-align:center;padding:8px 0;";
+                                        var html = '<h1 style="' + headStyle + 'margin:0 0 10px 0;">Статистика (' + modeLabel + ')</h1>';
+                                        html += '<div style="display:flex;margin-bottom:6px;">';
                                         var statCells = [
                                             { value: stats.gamesPlayed || 0, label: "Одиграно" },
                                             { value: stats.winPercentage || 0, label: "% Победа" },
@@ -1647,10 +1642,10 @@
                                             { value: stats.maxStreak || 0, label: "Најдужи Низ" }
                                         ];
                                         statCells.forEach(function (sc) {
-                                            html += '<div style="flex: 1; padding: 2px;"><div style="font-size: 26px; font-weight: 400; line-height: 1.2;">' + sc.value + '</div><div style="font-size: 10px; color: var(--color-tone-2); letter-spacing: 0.2px;">' + sc.label + '</div></div>';
+                                            html += '<div style="flex:1;"><div style="font-size:36px;font-weight:400;letter-spacing:0.05em;">' + sc.value + '</div><div style="font-size:12px;">' + sc.label + '</div></div>';
                                         });
                                         html += '</div>';
-                                        html += '<h3 style="margin: 14px 0 6px 0; font-size: 12px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;">Покушаји по табли</h3>';
+                                        html += '<h1 style="' + headStyle + 'margin:14px 0 10px 0;">Број покушаја</h1>';
                                         var g = stats.guesses || {};
                                         var distRows = [
                                             { label: "1", count: g[1] || 0 },
@@ -1660,58 +1655,43 @@
                                             { label: "✗", count: g.fail || 0, fail: true }
                                         ];
                                         var distMax = Math.max.apply(Math, distRows.map(function (r) { return r.count; }).concat([1]));
-                                        html += '<div style="padding: 0 16px;">';
+                                        html += '<div style="width:80%;margin:0 auto;">';
                                         distRows.forEach(function (r) {
-                                            var width = Math.max(7, Math.round((r.count / distMax) * 100));
-                                            var bg = r.fail ? "var(--color-tone-2)" : "var(--color-correct)";
-                                            html += '<div style="display: flex; align-items: center; gap: 6px; font-size: 13px; margin-bottom: 4px;">' +
-                                                    '<span style="width: 14px; text-align: right; font-weight: bold;">' + r.label + '</span>' +
-                                                    '<div style="flex: 1; height: 18px;"><div style="background: ' + bg + '; height: 100%; width: ' + width + '%; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; box-sizing: border-box; color: var(--key-evaluated-text-color); font-weight: bold; font-size: 11px;">' + r.count + '</div></div>' +
+                                            var width = Math.max(8, Math.round((r.count / distMax) * 100));
+                                            var bg = r.fail ? "var(--color-absent)" : "var(--color-correct)";
+                                            html += '<div style="display:flex;align-items:center;height:20px;padding-bottom:4px;font-size:14px;line-height:20px;">' +
+                                                    '<span style="width:16px;text-align:right;font-weight:bold;">' + r.label + '</span>' +
+                                                    '<div style="flex:1;padding-left:4px;"><div style="background:' + bg + ';height:100%;width:' + width + '%;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;box-sizing:border-box;color:var(--tile-text-color);font-weight:bold;">' + r.count + '</div></div>' +
                                                     '</div>';
                                         });
                                         html += '</div>';
                                         if (anyEval) {
-                                            var emoji = buildAnagramEmojiGrid(anagramBoards);
-                                            html += '<h3 style="margin: 16px 0 4px 0; font-size: 12px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;">Тренутна Игра</h3>';
-                                            html += '<pre style="font-family: inherit; font-size: 18px; line-height: 1.15; margin: 4px 0 0 0; white-space: pre; text-align: center;">' + emoji + '</pre>';
+                                            html += '<h1 style="' + headStyle + 'margin:18px 0 8px 0;">Тренутна игра</h1>';
+                                            html += '<pre style="font-family:inherit;font-size:18px;line-height:1.15;margin:0;white-space:pre;text-align:center;">' + buildAnagramEmojiGrid(anagramBoards) + '</pre>';
                                         }
                                         content.innerHTML = html;
-                                        var btnRow = document.createElement("div");
-                                        btnRow.style.cssText = "display: flex; gap: 10px; justify-content: center; margin-top: 16px; flex-wrap: wrap;";
                                         if (allDone) {
-                                            var shareBtn = document.createElement("button");
-                                            shareBtn.textContent = "Подели";
-                                            shareBtn.style.cssText = "background: var(--color-correct); color: var(--key-evaluated-text-color); border: none; border-radius: 24px; padding: 10px 20px; cursor: pointer; font-family: inherit; font-weight: bold; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;";
-                                            shareBtn.addEventListener("click", function (ev) {
-                                                ev.stopPropagation();
-                                                As(buildAnagramShareText(anagramBoards, e.dayOffset),
-                                                    function () { e.addToast("Резултати копирани", 2000); },
-                                                    function () { e.addToast("Дељење није успело", 2000, !0); }
-                                                );
-                                            });
-                                            btnRow.appendChild(shareBtn);
+                                            var actionBtn = document.createElement("button");
+                                            actionBtn.style.cssText = "background-color:var(--key-bg-correct);color:var(--key-evaluated-text-color);font-family:inherit;font-weight:bold;border-radius:4px;cursor:pointer;border:none;user-select:none;text-transform:uppercase;width:80%;font-size:20px;height:52px;margin:22px auto 6px;display:block;";
                                             if (isUnlimited) {
-                                                var playAgainBtn = document.createElement("button");
-                                                playAgainBtn.textContent = "Играј поново";
-                                                playAgainBtn.style.cssText = "background: var(--color-tone-7); color: var(--color-correct); border: 2px solid var(--color-correct); border-radius: 24px; padding: 10px 20px; cursor: pointer; font-family: inherit; font-weight: bold; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;";
-                                                playAgainBtn.addEventListener("click", function (ev) {
+                                                actionBtn.textContent = "Играј поново";
+                                                actionBtn.addEventListener("click", function (ev) {
                                                     ev.stopPropagation();
                                                     window.localStorage.removeItem(unlimitedGameStateKey);
                                                     window.location.reload();
                                                 });
-                                                btnRow.appendChild(playAgainBtn);
+                                            } else {
+                                                actionBtn.textContent = "Подели";
+                                                actionBtn.addEventListener("click", function (ev) {
+                                                    ev.stopPropagation();
+                                                    As(buildAnagramShareText(anagramBoards, e.dayOffset),
+                                                        function () { e.addToast("Резултати копирани", 2000); },
+                                                        function () { e.addToast("Дељење није успело", 2000, !0); }
+                                                    );
+                                                });
                                             }
+                                            content.appendChild(actionBtn);
                                         }
-                                        var closeBtn = document.createElement("button");
-                                        closeBtn.textContent = "Затвори";
-                                        closeBtn.style.cssText = "background: var(--color-tone-7); color: var(--color-tone-1); border: 2px solid var(--color-tone-3); border-radius: 24px; padding: 10px 20px; cursor: pointer; font-family: inherit; font-weight: bold; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;";
-                                        closeBtn.addEventListener("click", function (ev) {
-                                            ev.stopPropagation();
-                                            modal.removeAttribute("open");
-                                            modal.innerHTML = "";
-                                        });
-                                        btnRow.appendChild(closeBtn);
-                                        content.appendChild(btnRow);
                                         modal.appendChild(content);
                                         modal.setAttribute("open", "");
                                     }
