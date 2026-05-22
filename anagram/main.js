@@ -1090,7 +1090,7 @@
                 s = e % 100;
             return e + (a[(s - 20) % 10] || a[s] || a[0]);
         }
-        var Ha = new Date(2026, 5, 21, 0, 0, 0, 0); // ANAGRAM launch anchor — adjust before deploy
+        var Ha = new Date(2026, 4, 22, 0, 0, 0, 0); // ANAGRAM launch anchor (month is 0-indexed: 4 = May)
         function Na(e, a) {
             var s = new Date(e),
                 t = new Date(a).setHours(0, 0, 0, 0) - s.setHours(0, 0, 0, 0);
@@ -1118,13 +1118,13 @@
             return La[Math.floor(Math.random() * La.length)];
         }
         function dailyChain(e) {
-            var s = Ga(e), base = (s * 3) % La.length;
-            return [La[base % La.length], La[(base + 1) % La.length], La[(base + 2) % La.length]];
+            var n = La.length, s = Ga(e), base = (((s * 3) % n) + n) % n;
+            return [La[base], La[(base + 1) % n], La[(base + 2) % n]];
         }
         function pickDecoy(solution, seed) {
-            var start = (seed * 17 + 13) % Ba.length;
-            for (var i = 0; i < Ba.length; i++) {
-                var letter = Ba[(start + i) % Ba.length];
+            var n = Ba.length, start = (((seed * 17 + 13) % n) + n) % n;
+            for (var i = 0; i < n; i++) {
+                var letter = Ba[(start + i) % n];
                 if (solution.indexOf(letter) === -1) return letter;
             }
             return Ba[0];
