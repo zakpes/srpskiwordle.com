@@ -1090,7 +1090,7 @@
                 s = e % 100;
             return e + (a[(s - 20) % 10] || a[s] || a[0]);
         }
-        var Ha = new Date(2026, 5, 22, 0, 0, 0, 0); // ANAGRAM launch anchor — adjust before deploy
+        var Ha = new Date(2026, 5, 21, 0, 0, 0, 0); // ANAGRAM launch anchor — adjust before deploy
         function Na(e, a) {
             var s = new Date(e),
                 t = new Date(a).setHours(0, 0, 0, 0) - s.setHours(0, 0, 0, 0);
