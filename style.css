@@ -261,7 +261,7 @@ game-app {
 
 .sv-game-name {
   font-weight: 700;
-  font-size: 15px;
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin: 0 6px 6px 6px;
@@ -282,7 +282,7 @@ game-app {
   text-decoration: none;
   color: var(--color-tone-1);
   color: hsla(0, 0%, 100%, 0.7);;
-  font-weight: 600;
+  font-weight: 400;
   font-size: 14px;
   border-radius: 6px;
 }
@@ -294,6 +294,7 @@ game-app {
   flex-shrink: 0;
 }
 
-.sv-game-link.current {
+.sv-game-link.current,
+.sv-game-link:hover {
   background: var(--color-tone-5);
 }
