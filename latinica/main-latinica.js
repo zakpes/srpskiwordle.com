@@ -940,10 +940,10 @@
                     }
                     return e;
                 })),
-            wa = "gameState_la",
+            wa = "gameState_lat",
             xa = { boardState: null, evaluations: null, rowIndex: null, solution: null, gameStatus: null, lastPlayedTs: null, lastCompletedTs: null, restoringFromLocalStorage: null, hardMode: !1 },
-            gameModeKey = "gameMode_la",
-            unlimitedGameStateKey = "unlimitedGameState_la";
+            gameModeKey = "gameMode_lat",
+            unlimitedGameStateKey = "unlimitedGameState_lat";
         function za() {
             var e = window.localStorage.getItem(wa) || JSON.stringify(xa);
             return JSON.parse(e);
@@ -1123,7 +1123,7 @@
         function getRandomWord() {
             return La[Math.floor(Math.random() * La.length)];
         }
-        var Ya = "statistics_la",
+        var Ya = "statistics_lat",
             Ja = "fail",
             Ua = { currentStreak: 0, maxStreak: 0, guesses: n({ 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 }, Ja, 0), winPercentage: 0, gamesPlayed: 0, gamesWon: 0, averageGuesses: 0 };
         function statsKey() {
@@ -1404,8 +1404,8 @@
                             key: "connectedCallback",
                             value: function () {
                                 var e = this;
-                                var skipIntroModals = window.sessionStorage.getItem("sw-mode-switch_la") === "1" || this.restoringFromLocalStorage;
-                                window.sessionStorage.removeItem("sw-mode-switch_la");
+                                var skipIntroModals = window.sessionStorage.getItem("sw-mode-switch_lat") === "1" || this.restoringFromLocalStorage;
+                                window.sessionStorage.removeItem("sw-mode-switch_lat");
                                 this.shadowRoot.appendChild(Ka.content.cloneNode(!0)),
                                     (this.$game = this.shadowRoot.querySelector("#game")),
                                     (this.$board = this.shadowRoot.querySelector("#board")),
@@ -1488,7 +1488,7 @@
                                             pills.forEach(function(p) { p.disabled = true; });
                                             e.addToast("Prelazak na " + (newMode === "unlimited" ? "Neograničeni" : "Dnevni") + " režim...", 1000, !0);
                                             setTimeout(function() {
-                                                window.sessionStorage.setItem("sw-mode-switch_la", "1");
+                                                window.sessionStorage.setItem("sw-mode-switch_lat", "1");
                                                 window.location.reload();
                                             }, 600);
                                         });

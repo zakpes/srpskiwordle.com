@@ -1121,13 +1121,47 @@
             var n = La.length, s = Ga(e), base = (((s * 3) % n) + n) % n;
             return [La[base], La[(base + 1) % n], La[(base + 2) % n]];
         }
-        function pickDecoy(solution, seed) {
-            var n = Ba.length, start = (((seed * 17 + 13) % n) + n) % n;
-            for (var i = 0; i < n; i++) {
-                var letter = Ba[(start + i) % n];
-                if (solution.indexOf(letter) === -1) return letter;
+        var _letterFreqCache = null;
+        function getLetterFreq() {
+            if (_letterFreqCache) return _letterFreqCache;
+            var f = {};
+            for (var i = 0; i < La.length; i++) {
+                var w = La[i];
+                for (var k = 0; k < w.length; k++) {
+                    var c = w[k];
+                    f[c] = (f[c] || 0) + 1;
+                }
             }
-            return Ba[0];
+            _letterFreqCache = f;
+            return f;
+        }
+        function pickDecoys(solution, seed, count) {
+            var freq = getLetterFreq();
+            var candidates = [];
+            for (var i = 0; i < Ba.length; i++) {
+                var letter = Ba[i];
+                if (solution.indexOf(letter) === -1) {
+                    candidates.push({ letter: letter, weight: Math.max(1, freq[letter] || 0) });
+                }
+            }
+            var picked = [];
+            for (var d = 0; d < count; d++) {
+                if (candidates.length === 0) break;
+                var total = 0;
+                for (var i = 0; i < candidates.length; i++) total += candidates[i].weight;
+                var r = Math.abs(Math.sin((seed + d * 9301) * 49297));
+                var target = r * total;
+                var acc = 0;
+                for (var i = 0; i < candidates.length; i++) {
+                    acc += candidates[i].weight;
+                    if (target < acc) {
+                        picked.push(candidates[i].letter);
+                        candidates.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+            return picked;
         }
         function seededShuffle(arr, seed) {
             var a = arr.slice();
@@ -1202,9 +1236,10 @@
                 : dailyChain(date);
             var seed = isUnlimited ? Date.now() % 100000 : Ga(date);
             return words.map(function (w, idx) {
-                var decoy = pickDecoy(w, seed + idx);
-                var letters = seededShuffle((w + decoy).split(""), seed * 31 + idx);
-                return { solution: w, decoy: decoy, letters: letters };
+                var decoys = pickDecoys(w, seed + idx, 2);
+                var decoyStr = decoys.join("");
+                var letters = seededShuffle((w + decoyStr).split(""), seed * 31 + idx);
+                return { solution: w, decoy: decoyStr, letters: letters };
             });
         }
         var Ya = "statistics_anagram",
@@ -1632,7 +1667,7 @@
                                         var modeLabel = isUnlimited ? "Неограничени" : "Дневни";
                                         var headStyle = "font-weight:700;font-size:16px;letter-spacing:0.5px;text-transform:uppercase;text-align:center;";
                                         var content = document.createElement("div");
-                                        content.style.cssText = "text-align:center;padding:8px 0;";
+                                        content.style.cssText = "text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 0;";
                                         var html = '<h1 style="' + headStyle + 'margin:0 0 10px 0;">Статистика (' + modeLabel + ')</h1>';
                                         html += '<div style="display:flex;margin-bottom:6px;">';
                                         var statCells = [
@@ -1678,6 +1713,7 @@
                                                 actionBtn.addEventListener("click", function (ev) {
                                                     ev.stopPropagation();
                                                     window.localStorage.removeItem(unlimitedGameStateKey);
+                                                    window.sessionStorage.setItem("sw-mode-switch_anagram", "1");
                                                     window.location.reload();
                                                 });
                                             } else {
@@ -2587,7 +2623,7 @@
         customElements.define("game-switch", $s);
         var Ps = document.createElement("template");
         Ps.innerHTML =
-            '\n  <style>\n  .instructions {\n    font-size: 14px;\n    color: var(--color-tone-1)\n  }\n\n  .examples {\n    border-bottom: 1px solid var(--color-tone-4);\n    border-top: 1px solid var(--color-tone-4);\n  }\n\n  .example {\n    margin-top: 24px;\n    margin-bottom: 24px;\n  }\n\n  game-tile {\n    width: 40px;\n    height: 40px;\n  }\n\n  :host([page]) section {\n    padding: 16px;\n    padding-top: 0px;\n  }\n\n  </style>\n  <section>\n    <div class="instructions">\n      <p>Откриј <strong>три речи</strong> дневно — низ од три анаграма.</p>\n      <p>За сваку реч добијаш <strong>6 слова</strong> (5 тачних + 1 лажно) и <strong>4 покушаја</strong>.</p>\n      <p>Тапни слово испод табле да га додаш у ред. Тапни поново на додато слово да га уклониш. Када је ред пун, тапни <strong>УНЕСИ</strong>.</p>\n      <p>Након сваког покушаја, боја плочица показује колико си близу:</p>\n      <div class="examples">\n        <p><strong>Примери</strong></p>\n        <div class="example">\n          <div class="row">\n            <game-tile letter="ш" evaluation="correct" reveal></game-tile>\n            <game-tile letter="љ"></game-tile>\n            <game-tile letter="и"></game-tile>\n            <game-tile letter="в"></game-tile>\n            <game-tile letter="а"></game-tile>\n          </div>\n          <p>Слово <strong>Ш</strong> је у речи на правом месту.</p>\n        </div>\n        <div class="example">\n          <div class="row">\n            <game-tile letter="т"></game-tile>\n            <game-tile letter="е" evaluation="present" reveal></game-tile>\n            <game-tile letter="с"></game-tile>\n            <game-tile letter="л"></game-tile>\n            <game-tile letter="а"></game-tile>\n          </div>\n          <p>Слово <strong>Е</strong> постоји у речи али је на погрешном месту.</p>\n        </div>\n        <div class="example">\n          <div class="row">\n            <game-tile letter="с"></game-tile>\n            <game-tile letter="л"></game-tile>\n            <game-tile letter="а"></game-tile>\n            <game-tile letter="в" evaluation="absent" reveal></game-tile>\n            <game-tile letter="а"></game-tile>\n          </div>\n          <p>Слово <strong>В</strong> није у речи (можда је лажно слово).</p>\n        </div>\n      </div>\n      <p><strong>Нова три анаграма сваког дана!</strong></p>\n    </div>\n  </section>\n';
+            '\n  <style>\n  .instructions {\n    font-size: 14px;\n    color: var(--color-tone-1)\n  }\n\n  .examples {\n    border-bottom: 1px solid var(--color-tone-4);\n    border-top: 1px solid var(--color-tone-4);\n  }\n\n  .example {\n    margin-top: 24px;\n    margin-bottom: 24px;\n  }\n\n  game-tile {\n    width: 40px;\n    height: 40px;\n  }\n\n  :host([page]) section {\n    padding: 16px;\n    padding-top: 0px;\n  }\n\n  </style>\n  <section>\n    <div class="instructions">\n      <p>Откриј <strong>три речи</strong> дневно — низ од три анаграма.</p>\n      <p>За сваку реч добијаш <strong>7 слова</strong> (5 тачних + 2 лажна) и <strong>4 покушаја</strong>.</p>\n      <p>Тапни слово испод табле да га додаш у ред. Тапни поново на додато слово да га уклониш. Када је ред пун, тапни <strong>УНЕСИ</strong>.</p>\n      <p>Након сваког покушаја, боја плочица показује колико си близу:</p>\n      <div class="examples">\n        <p><strong>Примери</strong></p>\n        <div class="example">\n          <div class="row">\n            <game-tile letter="ш" evaluation="correct" reveal></game-tile>\n            <game-tile letter="љ"></game-tile>\n            <game-tile letter="и"></game-tile>\n            <game-tile letter="в"></game-tile>\n            <game-tile letter="а"></game-tile>\n          </div>\n          <p>Слово <strong>Ш</strong> је у речи на правом месту.</p>\n        </div>\n        <div class="example">\n          <div class="row">\n            <game-tile letter="т"></game-tile>\n            <game-tile letter="е" evaluation="present" reveal></game-tile>\n            <game-tile letter="с"></game-tile>\n            <game-tile letter="л"></game-tile>\n            <game-tile letter="а"></game-tile>\n          </div>\n          <p>Слово <strong>Е</strong> постоји у речи али је на погрешном месту.</p>\n        </div>\n        <div class="example">\n          <div class="row">\n            <game-tile letter="с"></game-tile>\n            <game-tile letter="л"></game-tile>\n            <game-tile letter="а"></game-tile>\n            <game-tile letter="в" evaluation="absent" reveal></game-tile>\n            <game-tile letter="а"></game-tile>\n          </div>\n          <p>Слово <strong>В</strong> није у речи (можда је лажно слово).</p>\n        </div>\n      </div>\n      <p><strong>Нова три анаграма сваког дана!</strong></p>\n    </div>\n  </section>\n';
         var Hs = (function (e) {
             r(t, e);
             var a = h(t);
